@@ -14,7 +14,7 @@ services:
     startCommand: 'gunicorn config.wsgi:application'
     plan: free
     branch: main
-    healthCheckPath: /
+    healthCheckPath: /health/
     envVars:
       - key: DATABASE_URL
         fromDatabase:
