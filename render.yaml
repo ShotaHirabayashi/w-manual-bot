@@ -11,7 +11,7 @@ services:
     env: python
     region: singapore
     buildCommand: './build.sh'
-    startCommand: 'gunicorn config.wsgi:application'
+    startCommand: 'gunicorn config.wsgi:application --workers=1 --threads=1 --timeout=120 --bind 0.0.0.0:$PORT'
     plan: free
     branch: main
     healthCheckPath: /health/
