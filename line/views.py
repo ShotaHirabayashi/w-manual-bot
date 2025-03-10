@@ -140,7 +140,7 @@ class IndexView(View):
             if liff_state and "line_id=" in liff_state:
                 line_id = liff_state.split("line_id=")[-1]
             elif liff_state and "description" in liff_state:
-                render(request, "line/description.html")
+                return render(request, "line/description.html")
 
 
         customer = Customer.objects.get(line_id=line_id)
