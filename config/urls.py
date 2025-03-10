@@ -18,6 +18,7 @@ urlpatterns = [
     path("line/", include("line.urls")),
     # health checkように200を返すだけのエンドポイント
     path("health/", return_200),
+    path("/", return_200),
 ]
 
 if settings.DEBUG:
