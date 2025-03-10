@@ -208,6 +208,6 @@ class DoneView(View):
         return render(request, "line/done.html")
 
 
-class DescriptionView:
+class DescriptionView(View):
     def get(self, request):
         return render(request, "line/description.html")
