@@ -206,3 +206,8 @@ class ConfirmView(View):
 class DoneView(View):
     def get(self, request):
         return render(request, "line/done.html")
+
+
+class DescriptionView:
+    def get(self, request):
+        return render(request, "line/description.html")

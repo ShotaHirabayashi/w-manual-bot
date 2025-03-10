@@ -13,4 +13,5 @@ urlpatterns = [
     path("confirm/",views.ConfirmView.as_view(),name="confirm",),
     # 予約完了
     path("done/", views.DoneView.as_view(), name="done"),
+    path('description/', views.DescriptionView.as_view(), name='description'),
 ]
