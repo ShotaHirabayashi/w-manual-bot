@@ -10,7 +10,7 @@ def notify_slack_msg(text):
     url = "https://slack.com/api/chat.postMessage"
     data = {
         "token": settings.SLACK_BOT_TOKEN,
-        "channel": "C01TY38JN72",
+        "channel": "C08HWQTPS9H",
         "text": text
     }
     requests.post(url, data=data)
