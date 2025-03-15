@@ -24,6 +24,7 @@ from .forms import CustomerForm
 from .models import Customer, QuestionMessage
 from .line_messages import send_menu_message
 from .open_ai_views import open_ai_chat
+from .send_slack import notify_slack_msg
 
 line_bot_api = LineBotApi(settings.CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(settings.CHANNEL_SECRET)
@@ -109,6 +110,7 @@ class CallbackView(View):
             # 情報を保存
             chat_manual_res = open_ai_chat(event.message.text)
             QuestionMessage.objects.create(customer=customer, message=event.message.text, response=chat_manual_res)
+            notify_slack_msg(f"ユーザー: {customer.name} が質問しました。\n質問: {event.message.text}\n回答: {chat_manual_res}")
             return send_text_message(line_id, chat_manual_res)
 
         except Exception as e:
