@@ -9,3 +9,4 @@ ngrok.exe
 node_modules
 media
 .idea/*
+wdb_/*
