@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レジャーホテル マニュアルBot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chat-container {
+            height: calc(100vh - 200px);
+        }
+        .message-container {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-indicator {
+            display: inline-block;
+            animation: typing 1.4s infinite;
+        }
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.2; }
+            30% { opacity: 1; }
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- ヘッダー -->
+    <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-hotel text-2xl"></i>
+                    <h1 class="text-2xl font-bold">レジャーホテル マニュアルBot</h1>
+                </div>
+                <button id="clearChat" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition duration-300">
+                    <i class="fas fa-trash-alt mr-2"></i>履歴をクリア
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="container mx-auto px-4 py-6 max-w-6xl">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- サイドバー -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-4">
+                    <h2 class="text-lg font-semibold mb-4 text-gray-800">
+                        <i class="fas fa-info-circle text-indigo-600 mr-2"></i>使い方
+                    </h2>
+                    <ol class="text-sm text-gray-600 space-y-2">
+                        <li>1. 質問を入力してください</li>
+                        <li>2. Enterキーまたは送信ボタンを押してください</li>
+                        <li>3. AIが社内マニュアルを検索して回答します</li>
+                    </ol>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-lg font-semibold mb-4 text-gray-800">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>質問例
+                    </h2>
+                    <div class="space-y-2">
+                        <button class="example-question w-full text-left text-sm bg-gray-50 hover:bg-indigo-50 p-3 rounded-lg transition duration-300 text-gray-700">
+                            利用単位について教えてください
+                        </button>
+                        <button class="example-question w-full text-left text-sm bg-gray-50 hover:bg-indigo-50 p-3 rounded-lg transition duration-300 text-gray-700">
+                            チェックインの手順は？
+                        </button>
+                        <button class="example-question w-full text-left text-sm bg-gray-50 hover:bg-indigo-50 p-3 rounded-lg transition duration-300 text-gray-700">
+                            清掃のタイミングは？
+                        </button>
+                        <button class="example-question w-full text-left text-sm bg-gray-50 hover:bg-indigo-50 p-3 rounded-lg transition duration-300 text-gray-700">
+                            キャンセル料について
+                        </button>
+                        <button class="example-question w-full text-left text-sm bg-gray-50 hover:bg-indigo-50 p-3 rounded-lg transition duration-300 text-gray-700">
+                            延長料金の計算方法は？
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- チャットエリア -->
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-xl shadow-md h-full flex flex-col">
+                    <!-- チャット履歴 -->
+                    <div id="chatMessages" class="chat-container flex-1 overflow-y-auto p-6 space-y-4">
+                        <!-- メッセージがここに表示されます -->
+                        <div class="text-center text-gray-400 py-8">
+                            <i class="fas fa-comments text-6xl mb-4"></i>
+                            <p>マニュアルについて質問してください</p>
+                        </div>
+                    </div>
+
+                    <!-- 入力エリア -->
+                    <div class="border-t p-4">
+                        <form id="chatForm" class="flex space-x-3">
+                            <input 
+                                type="text" 
+                                id="messageInput" 
+                                class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                placeholder="質問を入力してください..."
+                                autocomplete="off"
+                            >
+                            <button 
+                                type="submit" 
+                                class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition duration-300 flex items-center space-x-2"
+                            >
+                                <i class="fas fa-paper-plane"></i>
+                                <span>送信</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="mt-8 text-center text-gray-500 text-sm pb-4">
+        <p>© 2024 レジャーホテル マニュアルBot - Powered by OpenAI</p>
+    </footer>
+
+    <script>
+        // チャット履歴を保存する配列
+        let chatHistory = [];
+
+        // DOM要素の取得
+        const chatMessages = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('messageInput');
+        const clearChatBtn = document.getElementById('clearChat');
+        const exampleQuestions = document.querySelectorAll('.example-question');
+
+        // メッセージを追加する関数
+        function addMessage(message, isUser, processInfo = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-container flex ' + (isUser ? 'justify-end' : 'justify-start');
+            
+            const innerDiv = document.createElement('div');
+            innerDiv.className = 'max-w-4xl w-full';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'flex items-start space-x-3 ' + (isUser ? 'flex-row-reverse space-x-reverse' : '');
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ' + 
+                            (isUser ? 'bg-indigo-600' : 'bg-gray-600');
+            avatar.innerHTML = isUser ? 
+                '<i class="fas fa-user text-white"></i>' : 
+                '<i class="fas fa-robot text-white"></i>';
+            
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'flex-1';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'px-4 py-3 rounded-2xl ' + 
+                             (isUser ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-800');
+            
+            // メッセージテキストの処理（改行対応）
+            const formattedMessage = message.replace(/\n/g, '<br>');
+            bubble.innerHTML = formattedMessage;
+            
+            contentWrapper.appendChild(bubble);
+            
+            // プロセス情報を表示（Bot メッセージの場合のみ）
+            if (!isUser && processInfo) {
+                const processDiv = document.createElement('div');
+                processDiv.className = 'mt-2 p-3 bg-blue-50 rounded-lg text-xs text-gray-600 border-l-4 border-blue-200';
+                
+                let processHtml = '<div class="font-semibold mb-2"><i class="fas fa-cogs mr-1"></i>処理プロセス</div>';
+                
+                if (processInfo.original_query !== processInfo.rewritten_query) {
+                    processHtml += `<div class="mb-1"><span class="font-medium">質問リライト:</span> "${processInfo.rewritten_query}"</div>`;
+                }
+                
+                const searchTypeText = {
+                    'qa': 'QA優先検索',
+                    'all': '全文書検索'
+                };
+                processHtml += `<div class="mb-1"><span class="font-medium">検索タイプ:</span> ${searchTypeText[processInfo.search_type] || processInfo.search_type}</div>`;
+                
+                if (processInfo.confidence_check) {
+                    const confidenceText = processInfo.confidence_check.is_confident ? '高信頼度' : `低信頼度 (${processInfo.confidence_check.reason})`;
+                    processHtml += `<div class="mb-1"><span class="font-medium">信頼度判定:</span> ${confidenceText}</div>`;
+                }
+                
+                if (processInfo.fallback_used) {
+                    processHtml += `<div class="mb-1"><span class="font-medium text-orange-600">フォールバック:</span> 経営指針からも検索実施</div>`;
+                }
+                
+                if (processInfo.sources_count) {
+                    processHtml += `<div class="mb-1"><span class="font-medium">参照文書数:</span> ${processInfo.sources_count}件</div>`;
+                }
+                
+                processDiv.innerHTML = processHtml;
+                contentWrapper.appendChild(processDiv);
+            }
+            
+            messageContent.appendChild(avatar);
+            messageContent.appendChild(contentWrapper);
+            innerDiv.appendChild(messageContent);
+            
+            // タイムスタンプ
+            const timestamp = document.createElement('div');
+            timestamp.className = 'text-xs text-gray-400 mt-1 ' + (isUser ? 'text-right mr-14' : 'ml-14');
+            timestamp.textContent = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+            innerDiv.appendChild(timestamp);
+            
+            messageDiv.appendChild(innerDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // 最新のメッセージまでスクロール
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // ローディング表示
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'message-container flex justify-start';
+            typingDiv.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0 w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-robot text-white"></i>
+                    </div>
+                    <div class="bg-gray-100 px-4 py-3 rounded-2xl">
+                        <span class="typing-indicator">●</span>
+                        <span class="typing-indicator" style="animation-delay: 0.2s">●</span>
+                        <span class="typing-indicator" style="animation-delay: 0.4s">●</span>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // ローディング非表示
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        // 初回メッセージをクリア
+        function clearWelcomeMessage() {
+            const welcomeMessage = chatMessages.querySelector('.text-center');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+        }
+
+        // メッセージ送信処理
+        async function sendMessage(message) {
+            if (!message.trim()) return;
+
+            clearWelcomeMessage();
+            
+            // ユーザーメッセージを追加
+            addMessage(message, true);
+            chatHistory.push({ role: 'user', content: message });
+            
+            // 入力欄をクリア
+            messageInput.value = '';
+            
+            // ローディング表示
+            showTypingIndicator();
+            
+            try {
+                // APIリクエスト
+                const response = await fetch('/chat/api/chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: message })
+                });
+                
+                const data = await response.json();
+                
+                // ローディング非表示
+                hideTypingIndicator();
+                
+                if (response.ok) {
+                    // AIの応答を追加（プロセス情報も含む）
+                    addMessage(data.answer, false, data.process_info);
+                    chatHistory.push({ role: 'assistant', content: data.answer });
+                } else {
+                    addMessage('エラー: ' + (data.error || '不明なエラーが発生しました'), false);
+                }
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage('通信エラーが発生しました。しばらくしてから再度お試しください。', false);
+                console.error('Error:', error);
+            }
+        }
+
+        // フォーム送信イベント
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = messageInput.value;
+            await sendMessage(message);
+        });
+
+        // 履歴クリアボタン
+        clearChatBtn.addEventListener('click', () => {
+            if (confirm('チャット履歴をクリアしますか？')) {
+                chatMessages.innerHTML = `
+                    <div class="text-center text-gray-400 py-8">
+                        <i class="fas fa-comments text-6xl mb-4"></i>
+                        <p>マニュアルについて質問してください</p>
+                    </div>
+                `;
+                chatHistory = [];
+            }
+        });
+
+        // 質問例クリック
+        exampleQuestions.forEach(button => {
+            button.addEventListener('click', () => {
+                messageInput.value = button.textContent.trim();
+                messageInput.focus();
+            });
+        });
+
+        // Enterキーでも送信可能に
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>

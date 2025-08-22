@@ -16,6 +16,8 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # LINE
     path("line/", include("line.urls")),
+    # Chat UI
+    path("chat/", include("chat_ui.urls")),
     # health checkように200を返すだけのエンドポイント
     path("health/", return_200),
     path("", return_200),

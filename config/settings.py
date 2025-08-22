@@ -22,9 +22,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['*']
+# App Runner / Elastic Beanstalk環境用の設定
+if 'RDS_HOSTNAME' in os.environ or 'AWS_APPRUNNER_URL' in os.environ:
+    # 本番環境での設定
+    ALLOWED_HOSTS = [
+        os.environ.get('ALLOWED_HOST', 'localhost'),
+        '.elasticbeanstalk.com',
+        '.amazonaws.com',
+        '.awsapprunner.com',
+        '.awsapprunner.amazonaws.com',
+    ]
+else:
+    # 開発環境での設定
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +51,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "accounts",
     "line",
+    "chat_ui",
     "allauth",
     "allauth.account",
     "django.contrib.sites",
@@ -122,6 +135,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 STATIC_ROOT = str(BASE_DIR / "staticfiles")
+
+# Elastic Beanstalk環境での静的ファイル設定
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = str(BASE_DIR / "media")
