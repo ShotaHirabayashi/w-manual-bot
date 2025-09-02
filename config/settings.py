@@ -3,8 +3,6 @@ import os
 from pathlib import Path
 
 import environ
-from decouple import config
-from dj_database_url import parse as dburl
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
@@ -96,20 +94,25 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-default_dburl = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
+import dj_database_url
 
-# Render環境でのデータベース設定
-if 'RENDER' in os.environ and 'DATABASE_URL' in os.environ:
-    import dj_database_url
+# Database configuration
+if 'DATABASE_URL' in os.environ:
+    # Production (Render) or local with DATABASE_URL
     DATABASES = {
         'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
             conn_max_age=600,
             conn_health_checks=True,
         )
     }
 else:
+    # Local development with SQLite
     DATABASES = {
-        "default": config("DATABASE_URL", default=default_dburl, cast=dburl),
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
 
 # Password validation
