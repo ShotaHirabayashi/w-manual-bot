@@ -4,7 +4,8 @@ Gunicorn configuration for Render deployment
 import multiprocessing
 
 # Server socket
-bind = "0.0.0.0:8000"
+import os
+bind = f"0.0.0.0:{os.environ.get('PORT', '10000')}"
 backlog = 2048
 
 # Worker processes
