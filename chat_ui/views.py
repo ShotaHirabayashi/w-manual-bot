@@ -2,8 +2,15 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.conf import settings
 import json
-from common.ai_service import ai_service
+
+# Use lightweight AI service on memory-constrained environments
+if getattr(settings, 'USE_LITE_AI_SERVICE', False):
+    from common.ai_service_lite import AIServiceLite
+    ai_service = AIServiceLite()
+else:
+    from common.ai_service import ai_service
 
 def chat_view(request):
     """チャット画面のビュー"""

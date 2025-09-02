@@ -90,6 +90,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# AI Service configuration
+# Use lightweight version on Render free tier to avoid memory issues
+USE_LITE_AI_SERVICE = env.bool('USE_LITE_AI_SERVICE', default=True if 'RENDER' in os.environ else False)
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

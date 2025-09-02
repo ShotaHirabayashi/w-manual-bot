@@ -10,7 +10,7 @@ services:
     runtime: python
     plan: free
     buildCommand: "./build.sh"
-    startCommand: "gunicorn config.wsgi:application"
+    startCommand: "gunicorn config.wsgi:application --config gunicorn_config.py"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -27,4 +27,6 @@ services:
       - key: DEBUG
         value: False
       - key: RENDER
+        value: true
+      - key: USE_LITE_AI_SERVICE
         value: true
