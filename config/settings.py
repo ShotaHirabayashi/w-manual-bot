@@ -98,9 +98,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 default_dburl = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
 
-DATABASES = {
-    "default": config("DATABASE_URL", default=default_dburl, cast=dburl),
-}
+# Render環境でのデータベース設定
+if 'RENDER' in os.environ and 'DATABASE_URL' in os.environ:
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    DATABASES = {
+        "default": config("DATABASE_URL", default=default_dburl, cast=dburl),
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
