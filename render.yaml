@@ -29,4 +29,4 @@ services:
       - key: RENDER
         value: true
       - key: USE_LITE_AI_SERVICE
-        value: true
+        value: false
