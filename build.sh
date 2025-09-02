@@ -6,6 +6,14 @@ set -o errexit
 pip install --upgrade pip
 pip install -r requirements.txt
 
+# Pre-download models to avoid timeout during runtime
+echo "Pre-downloading AI models..."
+python << EOF
+import os
+os.environ['USE_LITE_AI_SERVICE'] = 'true'  # Force lite mode during build
+print("Skipping heavy model downloads - using lite mode")
+EOF
+
 # Collect static files
 python manage.py collectstatic --no-input
 

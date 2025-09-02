@@ -33,8 +33,8 @@ class AIServiceLite:
             openai_api_key=self.openai_api_key
         )
         
-        # Initialize vector store
-        persist_directory = "./chroma_db"
+        # Initialize vector store - use existing wdb folder
+        persist_directory = "./wdb"
         self.vector_store = Chroma(
             collection_name="wdb",
             embedding_function=self.embeddings,
