@@ -24,16 +24,19 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-# App Runner / Elastic Beanstalk環境用の設定
-if 'RDS_HOSTNAME' in os.environ or 'AWS_APPRUNNER_URL' in os.environ:
+# Render / App Runner / Elastic Beanstalk環境用の設定
+if 'RENDER' in os.environ or 'RDS_HOSTNAME' in os.environ or 'AWS_APPRUNNER_URL' in os.environ:
     # 本番環境での設定
     ALLOWED_HOSTS = [
         os.environ.get('ALLOWED_HOST', 'localhost'),
+        '.onrender.com',
         '.elasticbeanstalk.com',
         '.amazonaws.com',
         '.awsapprunner.com',
         '.awsapprunner.amazonaws.com',
     ]
+    if 'RENDER_EXTERNAL_HOSTNAME' in os.environ:
+        ALLOWED_HOSTS.append(os.environ['RENDER_EXTERNAL_HOSTNAME'])
 else:
     # 開発環境での設定
     ALLOWED_HOSTS = ['*']
