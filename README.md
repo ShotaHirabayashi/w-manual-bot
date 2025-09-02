@@ -7,3 +7,6 @@ python manage.py load_qa_data docs/rag-text.txt --doc-title "フロントマニ�
 python manage.py import_guidelines
 python manage.py import_guidelines --file docs/guideline_unified.txt
 python manage.py import_guidelines --clear  # 既存削除してから追加
+
+サインイン URL: https://553113730995.signin.aws.amazon.com/console
+ユーザー名: bayashi-admin
